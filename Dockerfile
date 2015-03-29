@@ -14,9 +14,9 @@ WORKDIR /tmp
 
 # initialize a new plugn path and install default plugins
 RUN plugn init
-RUN plugn install git://github.com/sequenceiq/consul-plugins-install.git install
+RUN plugn install https://github.com/sequenceiq/consul-plugins-install.git install
 RUN plugn enable install
-RUN plugn install git://github.com/sequenceiq/consul-plugins-ambari-start-stop.git ambari-start-stop
+RUN plugn install https://github.com/sequenceiq/consul-plugins-ambari-start-stop.git ambari-start-stop
 RUN plugn enable ambari-start-stop
 
 COPY consul-event-handler.sh /consul-event-handler.sh
