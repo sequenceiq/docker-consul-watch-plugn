@@ -85,7 +85,7 @@ __triggerPlugin() {
 __triggerPluginInContainer() {
   declare envVars=$1
   declare eventSpecPayload=$2
-  declare dockerContainer=$(echo $eventSpecPayload | cut -d" " -f 1)
+  declare dockerContainer=$(echo $(docker inspect --format="{{.Name}}" $(docker ps -qa)|grep $(echo $eventSpecPayload | cut -d" " -f 1))|sed 's,/,,')
 
   eval $envVars \
     PAYLOAD=\"$(echo $eventSpecPayload | cut -d" " -f 2-)\" \
