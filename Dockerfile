@@ -18,6 +18,8 @@ RUN plugn install https://github.com/sequenceiq/consul-plugins-install.git insta
 RUN plugn enable install
 RUN plugn install https://github.com/sequenceiq/consul-plugins-ambari-start-stop.git ambari-start-stop
 RUN plugn enable ambari-start-stop
+RUN plugn install https://github.com/sequenceiq/consul-plugins-kerberos create-kdc
+RUN plugn enable create-kdc
 
 COPY consul-event-handler.sh /consul-event-handler.sh
 COPY start.sh /start.sh
