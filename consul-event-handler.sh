@@ -96,7 +96,7 @@ __triggerPluginInContainer() {
 
 __getHostName() {
   while : ; do
-    hostname=$(hostname -f)
+    hostname=$(hostname).node.consul
     [[ $? == 0 ]] && break
     [[ $? != 0 ]] && sleep 5
   done
