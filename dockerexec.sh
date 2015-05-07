@@ -9,6 +9,7 @@ execInContainer() {
   : ${scriptfile:? required}
   docker exec -i $targetContainer \
     bash -c 'scriptfile=/tmp/$RANDOM.sh; \
+      umask 022 \
       while read line; do echo $line >> $scriptfile; done; \
       chmod +x $scriptfile; \
       PAYLOAD='"\"$PAYLOAD\""' \
