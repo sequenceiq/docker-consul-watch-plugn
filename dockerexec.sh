@@ -28,7 +28,7 @@ main() {
 }
 
 debug(){
-  [[ "$DEBUG" ]] && echo "[DEBUG] $*"
+  [[ "$DEBUG" ]] && echo "[DEBUG] $(date) $*"
 }
 
 [[ "$0" == "$BASH_SOURCE" ]] && main "$@"

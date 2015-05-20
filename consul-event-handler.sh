@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: ${LOGFILE:=/tmp/consul_handler.log}
+: ${LOGFILE:=/var/log/consul-watch/consul_handler.log}
 : ${BRIDGE_IP:=127.0.0.1}
 : ${CONSUL_HTTP_PORT:=8500}
 : ${DEBUG:=1}
@@ -8,7 +8,11 @@
 [[ "TRACE" ]] && set -x
 
 debug(){
-  [[ "$DEBUG" ]] && echo "[DEBUG] $*" >> $LOGFILE
+  [[ "$DEBUG" ]] && echo "[DEBUG] $(date) $*" >> $LOGFILE
+}
+
+error(){
+  echo "[ERROR] $(date) $*" >> $LOGFILE
 }
 
 get_field() {
@@ -105,7 +109,9 @@ __getHostName() {
 
 process_json() {
   while read json; do
-    debug $json
+    if [[ -z $json ]]; then
+      debug "json is missing (processing)"
+    fi
 
     event=$(get_field $json Name)
     id=$(get_field $json ID)
@@ -140,7 +146,7 @@ process_json() {
       debug "$eventtype finished successfully"
       curl -X PUT -d 'FINISHED' "http://$BRIDGE_IP:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
     else
-      debug "$eventtype failed to finish successfully"
+      error "$eventtype failed to finish successfully"
       curl -X PUT -d 'FAILED' "http://$BRIDGE_IP:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
     fi
   done
