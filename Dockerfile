@@ -21,6 +21,7 @@ RUN plugn enable ambari-start-stop
 RUN plugn install https://github.com/sequenceiq/consul-plugins-kerberos create-kdc
 RUN plugn enable create-kdc
 
+RUN mkdir /var/log/consul-watch
 COPY consul-event-handler.sh /consul-event-handler.sh
 COPY start.sh /start.sh
 COPY dockerexec.sh /dockerexec.sh

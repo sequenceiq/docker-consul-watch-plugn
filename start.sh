@@ -32,7 +32,7 @@ wait-for-consul() {
 start-watch() {
   ln -sf /lib/libpthread-2.18.so /lib/libpthread.so.0
   wait-for-consul
-  consul watch --http-addr=$BRIDGE_IP:$CONSUL_HTTP_PORT --type=event /consul-event-handler.sh 2>> /tmp/consul_handler_errors.log &
+  consul watch --http-addr=$BRIDGE_IP:$CONSUL_HTTP_PORT --type=event /consul-event-handler.sh 2>> /var/log/consul-watch/consul_handler_errors.log &
   sleep 5
   ln -sf /lib/libpthread-0.9.33.2.so  /lib/libpthread.so.0
 }
