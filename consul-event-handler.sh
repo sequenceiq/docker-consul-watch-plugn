@@ -1,7 +1,7 @@
 #!/bin/bash
 
 : ${LOGFILE:=/var/log/consul-watch/consul_handler.log}
-: ${BRIDGE_IP:=127.0.0.1}
+: ${CONSUL_HOST:=127.0.0.1}
 : ${CONSUL_HTTP_PORT:=8500}
 : ${DEBUG:=1}
 
@@ -30,7 +30,7 @@ __envVars() {
   echo "EVENT_ID=$eventId \
     EVENT_LTIME=$ltime \
     EVENT_VERSION=$version \
-    CONSUL_HOST=$BRIDGE_IP \
+    CONSUL_HOST=$CONSUL_HOST \
     CONSUL_HTTP_PORT=$CONSUL_HTTP_PORT \
     LOGFILE=$LOGFILE"
 }
@@ -100,7 +100,7 @@ __triggerPluginInContainer() {
 
 __getHostName() {
   while : ; do
-    hostname=$(hostname).node.dc1.consul
+    hostname=$(curl $CONSUL_HOST:$CONSUL_HTTP_PORT/v1/agent/self |jq .Config.NodeName -r).node.dc1.consul
     [[ $? == 0 ]] && break
     [[ $? != 0 ]] && sleep 5
   done
@@ -127,7 +127,7 @@ process_json() {
       debug "eventid is missing, skip processing"
       continue
     fi
-    curl -X PUT -d 'ACCEPTED' "http://$BRIDGE_IP:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
+    curl -X PUT -d 'ACCEPTED' "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
 
     case "$eventtype" in
       EXEC)
@@ -144,10 +144,10 @@ process_json() {
 
     if [ $? -eq 0 ]; then
       debug "$eventtype finished successfully"
-      curl -X PUT -d 'FINISHED' "http://$BRIDGE_IP:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
+      curl -X PUT -d 'FINISHED' "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
     else
       error "$eventtype failed to finish successfully"
-      curl -X PUT -d 'FAILED' "http://$BRIDGE_IP:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
+      curl -X PUT -d 'FAILED' "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
     fi
   done
 }
