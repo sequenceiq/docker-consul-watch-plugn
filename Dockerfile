@@ -4,6 +4,8 @@ MAINTAINER SequenceIQ
 RUN apk update && apk add curl bash git tar
 
 # download consul, plugn and jq binaries
+RUN curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
+    apk add --allow-untrusted /tmp/glibc-2.21-r2.apk && rm -rf /tmp/glibc-2.21-r2.apk /var/cache/apk/*
 RUN curl -Lk https://s3-eu-west-1.amazonaws.com/sequenceiq/plugn-wrap.tar.gz | tar -zxv -C /bin
 RUN curl -o /usr/bin/jq http://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/bin/jq
 RUN curl -Lko /bin/docker https://get.docker.io/builds/Linux/x86_64/docker-1.4.1 && chmod +x /bin/docker

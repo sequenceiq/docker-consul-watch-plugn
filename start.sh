@@ -19,20 +19,15 @@ wait-for-consul() {
 }
 
 start-watch() {
-  ln -sf /lib/libpthread-2.18.so /lib/libpthread.so.0
   wait-for-consul
   consul watch --http-addr=$CONSUL_HOST:$CONSUL_HTTP_PORT --type=event /consul-event-handler.sh 2>> /var/log/consul-watch/consul_handler_errors.log &
   sleep 5
-  ln -sf /lib/libpthread-0.9.33.2.so  /lib/libpthread.so.0
 }
 
 main() {
   start-watch >> /tmp/startup.log 2>&1
   echo NOTHING TO DO>> /tmp/tmp.log
-  while true; do
-    sleep 3
-    tail -f /tmp/tmp.log
-  done
+  tail -f /tmp/tmp.log
 }
 
 [[ "$0" == "$BASH_SOURCE" ]] && main "$@"
