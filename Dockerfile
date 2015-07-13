@@ -1,7 +1,7 @@
-FROM progrium/busybox
+FROM alpine:3.2
 MAINTAINER SequenceIQ
 
-RUN opkg-install curl bash git git-http tar coreutils-base64
+RUN apk update && apk add curl bash git tar
 
 # download consul, plugn and jq binaries
 RUN curl -Lk https://s3-eu-west-1.amazonaws.com/sequenceiq/plugn-wrap.tar.gz | tar -zxv -C /bin
