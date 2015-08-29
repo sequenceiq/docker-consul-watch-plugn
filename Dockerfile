@@ -1,7 +1,7 @@
 FROM alpine:3.2
 MAINTAINER SequenceIQ
 
-RUN apk update && apk add curl bash git tar
+RUN apk update && apk add curl bash git tar file unzip
 
 # download consul, plugn and jq binaries
 RUN curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
