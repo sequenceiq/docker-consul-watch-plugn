@@ -10,7 +10,7 @@ execInContainer() {
   docker exec -i $targetContainer \
     bash -c 'scriptfile=/tmp/$RANDOM.sh; \
       umask 022; \
-      while read line; do echo $line >> $scriptfile; done; \
+      while read -r line; do echo "$line" >> $scriptfile; done; \
       chmod +x $scriptfile; \
       PAYLOAD='"\"$PAYLOAD\""' \
       EVENT_ID='"\"$EVENT_ID\""' \
