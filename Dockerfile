@@ -18,8 +18,10 @@ WORKDIR /tmp
 RUN plugn init
 RUN plugn install https://github.com/sequenceiq/consul-plugins-install.git install
 RUN plugn enable install
+RUN echo "install" >> ${PLUGIN_PATH}/permanent-plugins
 RUN plugn install https://github.com/sequenceiq/consul-plugins-ambari-start-stop.git ambari-start-stop
 RUN plugn enable ambari-start-stop
+RUN echo "ambari-start-stop" >> ${PLUGIN_PATH}/permanent-plugins
 
 RUN mkdir /var/log/consul-watch
 COPY consul-event-handler.sh /consul-event-handler.sh
