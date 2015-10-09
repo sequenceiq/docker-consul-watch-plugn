@@ -100,11 +100,21 @@ __triggerPluginInContainer() {
 
 __getHostName() {
   while : ; do
-    hostname=$(curl $CONSUL_HOST:$CONSUL_HTTP_PORT/v1/agent/self |jq .Config.NodeName -r).node.dc1.consul
+    hostname=$(curl -f $CONSUL_HOST:$CONSUL_HTTP_PORT/v1/agent/self |jq .Config.NodeName -r).node.dc1.consul
     [[ $? == 0 ]] && break
     [[ $? != 0 ]] && sleep 5
   done
   echo $hostname
+}
+
+__updateState() {
+  let tries=12
+  while [ $tries != 0 ]; do
+    tries=$((tries-1))
+    curl -X PUT -d "$2" -f "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$1/$(__getHostName)"
+    [[ $? == 0 ]] && break
+    [[ $? != 0 ]] && [[ $tries != 0 ]] && sleep 5
+  done
 }
 
 process_json() {
@@ -127,7 +137,7 @@ process_json() {
       debug "eventid is missing, skip processing"
       continue
     fi
-    curl -X PUT -d 'ACCEPTED' "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
+    __updateState $id 'ACCEPTED'
 
     case "$eventtype" in
       EXEC)
@@ -144,10 +154,10 @@ process_json() {
 
     if [ $? -eq 0 ]; then
       debug "$eventtype finished successfully"
-      curl -X PUT -d 'FINISHED' "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
+      __updateState $id 'FINISHED'
     else
       error "$eventtype failed to finish successfully"
-      curl -X PUT -d 'FAILED' "http://$CONSUL_HOST:$CONSUL_HTTP_PORT/v1/kv/events/$id/$(__getHostName)"
+      __updateState $id 'FAILED'
     fi
   done
 }
