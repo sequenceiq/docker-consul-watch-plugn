@@ -20,6 +20,7 @@ RUN plugn install https://github.com/sequenceiq/consul-plugins-install.git insta
 RUN plugn enable install
 RUN echo "install" >> ${PLUGIN_PATH}/permanent-plugins
 RUN plugn install https://github.com/sequenceiq/consul-plugins-ambari-start-stop.git ambari-start-stop
+RUN cd $PLUGIN_PATH/available/ambari-start-stop && git checkout 1.1
 RUN plugn enable ambari-start-stop
 RUN echo "ambari-start-stop" >> ${PLUGIN_PATH}/permanent-plugins
 
