@@ -23,6 +23,9 @@ RUN plugn install https://github.com/sequenceiq/consul-plugins-ambari-start-stop
 RUN cd $PLUGIN_PATH/available/ambari-start-stop && git checkout 1.1
 RUN plugn enable ambari-start-stop
 RUN echo "ambari-start-stop" >> ${PLUGIN_PATH}/permanent-plugins
+RUN plugn install https://github.com/sequenceiq/consul-plugins-sssd.git sssd-setup
+RUN plugn enable sssd-setup
+RUN echo "sssd-setup" >> ${PLUGIN_PATH}/permanent-plugins
 
 RUN mkdir /var/log/consul-watch
 COPY consul-event-handler.sh /consul-event-handler.sh
