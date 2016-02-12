@@ -9,7 +9,7 @@ RUN curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifa
 RUN curl -Lk https://s3-eu-west-1.amazonaws.com/sequenceiq/plugn-wrap.tar.gz | tar -zxv -C /bin
 RUN curl -o /usr/bin/jq http://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/bin/jq
 RUN curl -Lko /bin/docker https://get.docker.io/builds/Linux/x86_64/docker-1.4.1 && chmod +x /bin/docker
-RUN curl -Lko /tmp/consul.zip https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip && unzip -d /bin /tmp/consul.zip && chmod +x /bin/consul && rm /tmp/consul.zip
+RUN curl -Lko /tmp/consul.zip https://releases.hashicorp.com/consul/0.5.0/consul_0.5.0_linux_amd64.zip && unzip -d /bin /tmp/consul.zip && chmod +x /bin/consul && rm /tmp/consul.zip
 
 ENV PLUGIN_PATH /plugins
 WORKDIR /tmp
